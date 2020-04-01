@@ -1,0 +1,2 @@
+# SKG
+Simple Knowledge Graph
