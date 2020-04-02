@@ -1,0 +1,24 @@
+{
+  "name": "skg",
+  "version": "0.1.0",
+  "description": "Simple Knowledge Graph",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnataylor/SKG.git"
+  },
+  "keywords": [
+    "Knowledge",
+    "Graph",
+    "RDF"
+  ],
+  "author": "John Taylor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/johnataylor/SKG/issues"
+  },
+  "homepage": "https://github.com/johnataylor/SKG#readme"
+}
