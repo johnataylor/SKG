@@ -63,7 +63,27 @@ class Graph {
     }
 
     removeFromIndex(indexX, x, y, z) {
-        return true;
+        var indexY = indexX[x];
+        if (indexY === undefined) {
+            return false;
+        }
+        var indexZ = indexY[y];
+        if (indexZ === undefined) {
+            return false;
+        }
+
+        const result = indexZ[z] !== undefined;
+
+        delete indexZ[z];
+
+        if (Object.keys(indexZ).length === 0) {
+            delete indexY[y];
+            if (Object.keys(indexY).length === 0) {
+                delete indexX[x];
+            }
+        }
+
+        return result;
     }
 
     *getTriples() {
