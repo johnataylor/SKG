@@ -4,7 +4,7 @@ function literal(value, type) {
 }
 
 function label(graph, id, s) {
-    graph.label(id, 'rdfs:label', s);
+    graph.assert(id, 'rdfs:label', literal(s));
 }
 
 class Graph {
@@ -13,6 +13,15 @@ class Graph {
         this.spo = {};
         this.pos = {};
         this.osp = {};
+        this.namespace = {};
+    }
+
+    setNamespace(prefix, uri) {
+        this.namespace[prefix] = uri;
+    }
+
+    getNamespace(prefix) {
+        return this.namespace[prefix];
     }
 
     assert(s, p, obj) {

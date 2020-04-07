@@ -1,6 +1,6 @@
 
 var assert = require('assert');
-const { Graph, literal } = require('../graph.js');
+const { Graph, literal, label } = require('../graph.js');
 
 function assertContains(collection, triple) {
     const expected = Object.entries(triple).toString();
@@ -236,6 +236,17 @@ describe('Graph', function() {
             assert(Array.from(g.getByObjectSubject('o1', 's1')).length === 2, 'expected 2 results');
             assertContains(g.getByObjectSubject('o1', 's1'), { s: 's1', p: 'p0', o: 'o1' });
             assertContains(g.getByObjectSubject('o1', 's1'), { s: 's1', p: 'p1', o: 'o1' });
+        });
+    });
+    describe('label', function() {
+        it('should assert rdfs label', function() {
+            const g = new Graph();
+            g.assert('s0', 'p0', 'o0');
+            label(g, 's0', 'subject0');
+            label(g, 'p0', 'predicate0');
+            assert(Array.from(g.getByPredicate('rdfs:label')).length === 2, 'expected 2 results');
+            assertContains(g.getByPredicate('rdfs:label'), { s: 's0', p: 'rdfs:label', o: { value: 'subject0', type: 'string' }});
+            assertContains(g.getByPredicate('rdfs:label'), { s: 'p0', p: 'rdfs:label', o: { value: 'predicate0', type: 'string' }});
         });
     });
 });
