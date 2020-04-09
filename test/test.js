@@ -249,4 +249,33 @@ describe('Graph', function() {
             assertContains(g.getByPredicate('rdfs:label'), { s: 'p0', p: 'rdfs:label', o: { value: 'predicate0', type: 'string' }});
         });
     });
+    describe('iteration', function() {
+        it('should support iteration', function() {
+            const g = new Graph();
+            g.assert('s0', 'p0', 'o0');
+            g.assert('s0', 'p0', 'o1');
+            g.assert('s0', 'p1', 'o0');
+            g.assert('s0', 'p1', 'o1');
+            g.assert('s1', 'p0', 'o0');
+            g.assert('s1', 'p0', 'o1');
+            g.assert('s1', 'p1', 'o0');
+            g.assert('s1', 'p1', 'o1');
+            const result = [];
+            for (const s of g.getSubjects()) {
+                for (const p of s.getPredicates()) {
+                    for (const o of p.getObjects()) {
+                        result.push({ s: s, p: p, s: o });
+                    }
+                }
+            }
+            assertContains(result, { s: 's0', p: 'p0', o: 'o0' });
+            assertContains(result, { s: 's0', p: 'p0', o: 'o1' });
+            assertContains(result, { s: 's0', p: 'p1', o: 'o0' });
+            assertContains(result, { s: 's0', p: 'p1', o: 'o1' });
+            assertContains(result, { s: 's1', p: 'p0', o: 'o0' });
+            assertContains(result, { s: 's1', p: 'p0', o: 'o1' });
+            assertContains(result, { s: 's1', p: 'p1', o: 'o0' });
+            assertContains(result, { s: 's1', p: 'p1', o: 'o1' });
+        });
+    });
 });

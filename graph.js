@@ -7,6 +7,34 @@ function label(graph, id, s) {
     graph.assert(id, 'rdfs:label', literal(s));
 }
 
+class GraphSubjectPredicate {
+
+    constructor(p, o) {
+        this.value = p;
+        this.o = o;
+    }
+
+    *getObjects() {
+        for (const obj in this.o) {
+            yield JSON.parse(obj);
+        }
+    }
+}
+
+class GraphSubject {
+    
+    constructor(s, po) {
+        this.value = s;
+        this.po = po;
+    }
+
+    *getPredicates() {
+        for (const p in this.po) {
+            yield new GraphSubjectPredicate(p, this.po[p]);
+        }
+    }
+}
+
 class Graph {
 
     constructor() {
@@ -183,6 +211,12 @@ class Graph {
         }
         for (const p in itemsS) {
             yield { s: s, p: p, o: JSON.parse(o) };
+        }
+    }
+
+    *getSubjects() {
+        for (const s in this.spo) {
+            yield new GraphSubject(s, this.spo[s]);
         }
     }
 }
