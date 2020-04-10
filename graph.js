@@ -243,6 +243,14 @@ class Graph {
             yield new GraphSubject(s, this.spo[s]);
         }
     }
+
+    toString() {
+        const result = [];
+        for (const { s, p, o } of this.getTriples()) {
+            result.push(`${ s } ${ p } ${ JSON.stringify(o) } .`);
+        }
+        return result.join('\n');
+    }
 }
 
 exports.literal = literal;

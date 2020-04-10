@@ -302,4 +302,15 @@ describe('Graph', function() {
             assertContains(result.getTriples(), { s: 's1', p: 'p1', o: 'o1' });
         });
     });
+    describe('toString', function() {
+        it('should support toString', function() {
+            const g = new Graph();
+            g.assert('s0', 'p0', 'o1');
+            g.assert('s1', 'p0', 'o1');
+
+            const s = g.toString();
+
+            assert('s0 p0 o1 .\ns1 p0 o1\n', s);
+        });
+    });
 });
