@@ -1,6 +1,6 @@
 
 var assert = require('assert');
-const { Graph, literal, label } = require('../graph.js');
+const { Graph, literal, label, serialize, deserialize } = require('../graph.js');
 
 function assertContains(collection, triple) {
     const expected = Object.entries(triple).toString();
@@ -276,6 +276,30 @@ describe('Graph', function() {
             assertContains(result, { s: 's1', p: 'p0', o: 'o1' });
             assertContains(result, { s: 's1', p: 'p1', o: 'o0' });
             assertContains(result, { s: 's1', p: 'p1', o: 'o1' });
+        });
+    });
+    describe('serialization', function() {
+        it('should support roundtrip serialization', function() {
+            const g = new Graph();
+            g.assert('s0', 'p0', 'o0');
+            g.assert('s0', 'p0', 'o1');
+            g.assert('s0', 'p1', 'o0');
+            g.assert('s0', 'p1', 'o1');
+            g.assert('s1', 'p0', 'o0');
+            g.assert('s1', 'p0', 'o1');
+            g.assert('s1', 'p1', 'o0');
+            g.assert('s1', 'p1', 'o1');
+
+            const result = deserialize(JSON.parse(JSON.stringify(serialize(g))));
+
+            assertContains(result.getTriples(), { s: 's0', p: 'p0', o: 'o0' });
+            assertContains(result.getTriples(), { s: 's0', p: 'p0', o: 'o1' });
+            assertContains(result.getTriples(), { s: 's0', p: 'p1', o: 'o0' });
+            assertContains(result.getTriples(), { s: 's0', p: 'p1', o: 'o1' });
+            assertContains(result.getTriples(), { s: 's1', p: 'p0', o: 'o0' });
+            assertContains(result.getTriples(), { s: 's1', p: 'p0', o: 'o1' });
+            assertContains(result.getTriples(), { s: 's1', p: 'p1', o: 'o0' });
+            assertContains(result.getTriples(), { s: 's1', p: 'p1', o: 'o1' });
         });
     });
 });

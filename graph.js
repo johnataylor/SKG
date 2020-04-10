@@ -7,6 +7,30 @@ function label(graph, id, s) {
     graph.assert(id, 'rdfs:label', literal(s));
 }
 
+function serialize(graph) {
+    const result = { graph: {} };
+    for (const s of graph.getSubjects()) {
+        result.graph[s.value] = {};
+        for (const p of s.getPredicates()) {
+            result.graph[s.value][p.value] = [];
+            for (const o of p.getObjects()) {
+                result.graph[s.value][p.value].push(o);
+            }
+        }
+    }
+    return result;
+}
+
+function deserialize(obj) {
+    const result = new Graph();
+    for (const s in obj.graph) {
+        for (const p in obj.graph[s]) {
+            obj.graph[s][p].forEach((o) => { result.assert(s, p, o); });
+        }
+    }
+    return result;
+}
+
 class GraphSubjectPredicate {
 
     constructor(p, o) {
@@ -223,4 +247,6 @@ class Graph {
 
 exports.literal = literal;
 exports.label = label;
+exports.serialize = serialize;
+exports.deserialize = deserialize;
 exports.Graph = Graph;
