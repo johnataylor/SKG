@@ -102,6 +102,18 @@ class Graph {
         return count;
     }
 
+    merge(graph) {
+        for (const triple of graph.getTriples()) {
+            this.assert(triple.s, triple.p, triple.o);
+        }
+    }
+
+    minus(graph) {
+        for (const triple of graph.getTriples()) {
+            this.retract(triple.s, triple.p, triple.o);
+        }
+    }
+
     addToIndex(indexX, x, y, z) {
         var indexY = indexX[x];
         if (indexY === undefined) {

@@ -120,6 +120,43 @@ describe('Graph', function() {
             assert(Array.from(g.getTriples()).length === 4, 'expected 4 triples');
         });
     });
+    describe('merge', function() {
+        it('should merge', function() {
+            const g = new Graph();
+            assert(g.assert('s0', 'p0', 'o0'));
+            assert(g.assert('s1', 'p0', 'o0'));
+            assert(g.assert('s1', 'p0', 'o1'));
+            assert(g.assert('s1', 'p1', 'o1'));
+            const d = new Graph();
+            assert(d.assert('s0', 'p0', 'o0'));
+            assert(d.assert('s0', 'p0', 'o1'));
+            assert(d.assert('s1', 'p0', 'o1'));
+            g.merge(d);
+            assert(Array.from(g.getTriples()).length === 5, 'expected 5 results');
+            assertContains(g.getTriples(), { s: 's0', p: 'p0', o: 'o0' });
+            assertContains(g.getTriples(), { s: 's0', p: 'p0', o: 'o1' });
+            assertContains(g.getTriples(), { s: 's1', p: 'p0', o: 'o0' });
+            assertContains(g.getTriples(), { s: 's1', p: 'p0', o: 'o1' });
+            assertContains(g.getTriples(), { s: 's1', p: 'p1', o: 'o1' });
+        });
+    });
+    describe('minus', function() {
+        it('should minus', function() {
+            const g = new Graph();
+            assert(g.assert('s0', 'p0', 'o0'));
+            assert(g.assert('s1', 'p0', 'o0'));
+            assert(g.assert('s1', 'p0', 'o1'));
+            assert(g.assert('s1', 'p1', 'o1'));
+            const d = new Graph();
+            assert(d.assert('s0', 'p0', 'o0'));
+            assert(d.assert('s1', 'p0', 'o1'));
+            assert(d.assert('s1', 'p1', 'o0'));
+            g.minus(d);
+            assert(Array.from(g.getTriples()).length === 2, 'expected 2 results');
+            assertContains(g.getTriples(), { s: 's1', p: 'p0', o: 'o0' });
+            assertContains(g.getTriples(), { s: 's1', p: 'p1', o: 'o1' });
+        });
+    });
     describe('getBySubject', function() {
         it('should getBySubject', function() {
             const g = new Graph();
