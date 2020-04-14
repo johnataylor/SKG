@@ -62,6 +62,7 @@ class GraphSubject {
 class Graph {
 
     constructor() {
+        this.count = 0;
         this.spo = {};
         this.pos = {};
         this.osp = {};
@@ -82,24 +83,22 @@ class Graph {
         added |= this.addToIndex(this.spo, s, p, o);
         added |= this.addToIndex(this.pos, p, o, s);
         added |= this.addToIndex(this.osp, o, s, p);
+        if (added) {
+            this.count++;
+        }
         return added;
     }
 
     retract(s, p, obj) {
         const o = JSON.stringify(obj);
-        let added = false;
-        added |= this.removeFromIndex(this.spo, s, p, o);
-        added |= this.removeFromIndex(this.pos, p, o, s);
-        added |= this.removeFromIndex(this.osp, o, s, p);
-        return added;
-    }
-
-    get count() {
-        let count = 0;
-        for (const triple of this.getTriples()) {
-            count++;
+        let removed = false;
+        removed |= this.removeFromIndex(this.spo, s, p, o);
+        removed |= this.removeFromIndex(this.pos, p, o, s);
+        removed |= this.removeFromIndex(this.osp, o, s, p);
+        if (removed) {
+            this.count--;
         }
-        return count;
+        return removed;
     }
 
     merge(graph) {

@@ -275,6 +275,36 @@ describe('Graph', function() {
             assertContains(g.getByObjectSubject('o1', 's1'), { s: 's1', p: 'p1', o: 'o1' });
         });
     });
+    describe('count', function() {
+        it('should keep count of number of distinct triples', function() {
+            const g = new Graph();
+            assert(g.assert('s0', 'p0', 'o0'));
+            assert(g.assert('s0', 'p0', 'o1'));
+            assert(g.assert('s0', 'p1', 'o0'));
+            assert(g.assert('s0', 'p1', 'o1'));
+            assert(g.assert('s1', 'p0', 'o0'));
+            assert(g.assert('s1', 'p0', 'o1'));
+            assert(g.assert('s1', 'p1', 'o0'));
+            assert(g.assert('s1', 'p1', 'o1'));
+            assert(!g.assert('s0', 'p0', 'o0'));
+            assert(!g.assert('s0', 'p0', 'o1'));
+            assert(!g.assert('s0', 'p1', 'o0'));
+            assert(!g.assert('s0', 'p1', 'o1'));
+            assert(!g.assert('s1', 'p0', 'o0'));
+            assert(!g.assert('s1', 'p0', 'o1'));
+            assert(!g.assert('s1', 'p1', 'o0'));
+            assert(!g.assert('s1', 'p1', 'o1'));
+            assert(g.retract('s0', 'p0', 'o0'));
+            assert(g.retract('s0', 'p1', 'o0'));
+            assert(g.retract('s1', 'p1', 'o0'));
+            assert(g.retract('s1', 'p1', 'o1'));
+            assert(!g.retract('s0', 'p1', 'o0'));
+            assert(!g.retract('s1', 'p1', 'o0'));
+            assert(g.assert('s2', 'p1', 'o0'));
+            assert(g.assert('s2', 'p1', 'o1'));
+            assert(Array.from(g.getTriples()).length === g.count, 'expected count to equal getTriples length');
+        });
+    });
     describe('label', function() {
         it('should assert rdfs label', function() {
             const g = new Graph();
